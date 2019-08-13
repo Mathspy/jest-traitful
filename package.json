@@ -1,0 +1,54 @@
+{
+  "name": "jest-traitful",
+  "version": "0.0.0",
+  "main": "dist/jest-trailtful.cjs.js",
+  "description": "A bundle of Jest matchers for simplifying testing traitful JavaScript",
+  "files": [
+    "/dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint:fix": "eslint --fix --ignore-path .gitignore .",
+    "format": "prettier --ignore-path .gitignore --write '**/*.js'",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "jest",
+    "matchers",
+    "traitful",
+    "testing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mathspy/jest-traitful.git"
+  },
+  "author": "Mathspy <mathspy257@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.15.1",
+    "husky": "^3.0.3",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
+    "rollup": "^1.19.4",
+    "rollup-plugin-babel": "^4.3.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "dependencies": {}
+}
