@@ -10,8 +10,9 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test:ci": "jest --ci",
+    "test:watch": "jest --watch \"src/.*(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$\"",
+    "test:integ": "rollup -c && jest \"test/.*.[jt]sx?$\"",
     "test:coverage": "jest --coverage",
     "lint": "eslint --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ignore-path .gitignore .",
