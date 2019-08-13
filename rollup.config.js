@@ -26,7 +26,7 @@ export default [
   // CommonJS build
   {
     input,
-    external,
+    external: id => external.includes(id.split("/")[0]),
     output: {
       file: pkg.main,
       format: "cjs",
