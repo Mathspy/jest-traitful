@@ -122,5 +122,30 @@ describe("traitfully", () => {
         expect.not.traitfully({ a: 1, x: () => {} }),
       );
     });
+
+    it("will function if some or all of the properties are other asymmetric matchers", () => {
+      expect({ a: 1, x: () => {} }).toEqual(
+        expect.traitfully({ a: expect.anything(), x: () => {} }),
+      );
+
+      expect({ a: 1, x: () => {} }).toEqual(
+        expect.traitfully({ a: expect.anything(), x: expect.any(Function) }),
+      );
+
+      expect({ a: { m: 5, n: 6 }, x: () => {} }).toEqual(
+        expect.traitfully({
+          a: expect.objectContaining({ m: 5 }),
+          x: expect.any(Function),
+        }),
+      );
+
+      expect({ a: 1, x: () => {} }).not.toEqual(
+        expect.traitfully({
+          a: expect.anything(),
+          x: expect.any(Function),
+          y: expect.any(Function),
+        }),
+      );
+    });
   });
 });
