@@ -8,14 +8,32 @@ import { prettyFormat, INDENT_ALL } from "../utils";
 
 function withoutMethods(obj) {
   return _.cloneDeepWith(obj, function customizer(v) {
-    return _.isObject(v)
-      ? _.cloneDeepWith(_.omitBy(v, _.isFunction), _.after(2, customizer))
-      : undefined;
+    if (v && v.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
+      return v;
+    }
+
+    if (_.isObject(v)) {
+      return _.cloneDeepWith(_.omitBy(v, _.isFunction), _.after(2, customizer));
+    }
+
+    return undefined;
   });
 }
 
 function predicate(received, expected) {
-  return _.isEqual(withoutMethods(received), withoutMethods(expected));
+  return _.isEqualWith(
+    withoutMethods(received),
+    withoutMethods(expected),
+    function customizer(first, second) {
+      if (first && first.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
+        return first.asymmetricMatch(second);
+      }
+      if (second && second.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
+        return second.asymmetricMatch(second);
+      }
+      return _.isFunction(first) || _.isFunction(second) || undefined;
+    },
+  );
 }
 
 function message(received, expected, inverse) {
