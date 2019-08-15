@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "jest-matcher-utils": "^24.8.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "pretty-format": "^24.8.0"
   }
 }
