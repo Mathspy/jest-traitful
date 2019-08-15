@@ -1,5 +1,10 @@
 import _ from "lodash";
-import { matcherHint, printExpected, printReceived } from "jest-matcher-utils";
+import {
+  matcherHint,
+  EXPECTED_COLOR,
+  RECEIVED_COLOR,
+} from "jest-matcher-utils";
+import { prettyFormat, INDENT_ALL } from "../utils";
 
 function predicate(received, expected) {
   return _.isEqualWith(received, expected, function customizer(first, second) {
@@ -15,11 +20,11 @@ function message(received, expected, inverse) {
       "expected",
     )}\n\nExpected object to${
       inverse ? " NOT " : " "
-    }have identical properties AND methods with same names as:\n  ${printExpected(
-      expected,
+    }have identical properties AND methods with same names as:\n${INDENT_ALL(
+      EXPECTED_COLOR(prettyFormat(expected)),
     )}\nbut ${
       inverse ? "they were identical:" : "instead received:"
-    }\n  ${printReceived(received)}`;
+    }\n${INDENT_ALL(RECEIVED_COLOR(prettyFormat(received)))}`;
 }
 
 class Traitfully {
@@ -40,10 +45,8 @@ class Traitfully {
   }
 
   toAsymmetricMatcher() {
-    return `Traitfully${this.inverse ? "Not" : ""}SameAs<${JSON.stringify(
+    return `Traitfully${this.inverse ? "Not" : ""}SameAs<${prettyFormat(
       this.sample,
-      null,
-      2,
     )}>`;
   }
 
