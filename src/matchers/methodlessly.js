@@ -1,5 +1,10 @@
 import _ from "lodash";
-import { matcherHint, printExpected, printReceived } from "jest-matcher-utils";
+import {
+  matcherHint,
+  EXPECTED_COLOR,
+  RECEIVED_COLOR,
+} from "jest-matcher-utils";
+import { prettyFormat, INDENT_ALL } from "../utils";
 
 function withoutMethods(obj) {
   return _.cloneDeepWith(obj, function customizer(v) {
@@ -21,11 +26,13 @@ function message(received, expected, inverse) {
       "expected",
     )}\n\nExpected object without methods to${
       inverse ? " NOT " : " "
-    }be the same as:\n  ${printExpected(withoutMethods(expected))}\nbut ${
-      inverse ? "it was the same:" : "instead received:"
-    }\n  ${printReceived(
-      withoutMethods(received),
-    )}\nand original object was:\n  ${printReceived(received)}`;
+    }be the same as:\n${INDENT_ALL(
+      EXPECTED_COLOR(prettyFormat(withoutMethods(expected))),
+    )}\nbut ${inverse ? "it was the same:" : "instead received:"}\n${INDENT_ALL(
+      RECEIVED_COLOR(prettyFormat(withoutMethods(received))),
+    )}\nand original object was:\n${INDENT_ALL(
+      RECEIVED_COLOR(prettyFormat(received)),
+    )}`;
 }
 
 class Methodlessly {
@@ -46,10 +53,8 @@ class Methodlessly {
   }
 
   toAsymmetricMatcher() {
-    return `WithoutMethods${this.inverse ? "Not" : ""}SameAs<${JSON.stringify(
+    return `WithoutMethods${this.inverse ? "Not" : ""}SameAs<${prettyFormat(
       this.sample,
-      null,
-      2,
     )}>`;
   }
 
