@@ -89,11 +89,18 @@ Asserts that two objects are deeply equal if all their methods were completely i
 expect({ a: 1 }).toEqualWithoutMethods({ a: 1 }); // true
 expect({ a: 1 }).toEqualWithoutMethods({ a: 1, x: () => {} }); // true
 expect({ a: 1, x: () => {} }).toEqualWithoutMethods({ a: 1 }); // true
+expect({ a: 1 }).toEqualWithoutMethods({ a: expect.any(Number) }); // true, allows use of other asymmetric within it
 expect({ a: 1, x: () => {} }).toEqualWithoutMethods({ a: 1, x: () => {} }); // true
 expect({ a: 1, x: () => {} }).toEqualWithoutMethods({ a: 1, y: () => {} }); // true
 
 expect({ b: 1, x: () => {} }).not.toEqualWithoutMethods({ a: 1, x: () => {} }); // true
 ```
+
+<p style="color: red;">WARNING:</p>
+
+Currently `expect.anything()` and `expect.any(Function)` behave incorrectly with `.toEqualWithoutMethods()`/`.methodlessly()` when used to compare against a function\
+i.e: `expect({ a: () => {} }).toEqualWithoutMethods({ a: expect.any(Function) });` will incorrectly return false.\
+However I have my best elves on the job to fix this!
 
 #### expect.methodlessly(object)
 
@@ -103,6 +110,7 @@ The asymmetric variant of `.toEqualWithoutMethods`.
 expect({ a: 1 }).toEqual(expect.methodlessly({ a: 1 })); // true
 expect({ a: 1 }).toEqual(expect.methodlessly({ a: 1, x: () => {} })); // true
 expect({ a: 1, x: () => {} }).toEqual(expect.methodlessly({ a: 1 })); // true
+expect({ a: 1 }).toEqual(expect.methodlessly({ a: expect.any(Number) })); // true, allows use of other asymmetric within it
 expect({ a: 1, x: () => {} }).toEqual(
   expect.methodlessly({ a: 1, x: () => {} }),
 ); // true
@@ -125,6 +133,7 @@ _If Traitful JavaScript was followed this should basically assert full equality 
 expect({a: 1}).toEqualTraitfully({a: 1}); // true
 expect({a: 1, x: () => {}}).toEqualTraitfully({a: 1, x: () => {}}); // true
 expect({a: 1, x: () => true}).toEqualTraitfully({a: 1, x: () => false); // true
+expect({a: 1, x: () => {}}).toEqualTraitfully({a: expect.any(Number), x: () => {}}); // true, allows use of other asymmetric within it
 
 expect({a: 1, x: () => {}}).not.toEqualTraitfully({a: 1}); // true
 expect({a: 1, x: () => {}}).not.toEqualTraitfully({a: 1, y: () => {}}); // true
@@ -139,6 +148,7 @@ The asymmetric variant of `.toEqualTraitfully`.
 expect({a: 1}).toEqual(expect.traitfully({a: 1})); // true
 expect({a: 1, x: () => {}}).toEqual(expect.traitfully({a: 1, x: () => {}})); // true
 expect({a: 1, x: () => true}).toEqual(expect.traitfully({a: 1, x: () => false)); // true
+expect({a: 1, x: () => {}}).toEqual(expect.traitfully({a: expect.any(Number), x: () => {}})); // true, allows use of other asymmetric within it
 
 expect({a: 1, x: () => {}}).toEqual(expect.traitfully({a: 1})); // true
 expect({a: 1, x: () => {}}).toEqual(expect.traitfully({a: 1, y: () => {}})); // true
