@@ -8,6 +8,12 @@ import { prettyFormat, INDENT_ALL } from "../utils";
 
 function predicate(received, expected) {
   return _.isEqualWith(received, expected, function customizer(first, second) {
+    if (first && first.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
+      return first.asymmetricMatch(second);
+    }
+    if (second && second.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
+      return second.asymmetricMatch(second);
+    }
     return (_.isFunction(first) && _.isFunction(second)) || undefined;
   });
 }
