@@ -94,13 +94,21 @@ expect({ a: 1, x: () => {} }).toEqualWithoutMethods({ a: 1, x: () => {} }); // t
 expect({ a: 1, x: () => {} }).toEqualWithoutMethods({ a: 1, y: () => {} }); // true
 
 expect({ b: 1, x: () => {} }).not.toEqualWithoutMethods({ a: 1, x: () => {} }); // true
+
+// It should be noted that by using expect.any(Function) or expect.anything() or similar
+// you are explicitly opting out of methodlessly's function === undefined equality.
+// Example:
+expect({ a: 1, x: () => {} }).toEqualWithoutMethods({
+  a: 1,
+  x: () => {},
+  y: expect.any(Function), // or expect.anything()
+}); // false!
+// But of course this will work as expected:
+expect({ a: 1, x: () => {} }).toEqualWithoutMethods({
+  a: 1,
+  x: expect.any(Function),
+}); // true
 ```
-
-<p style="color: red;">WARNING:</p>
-
-Currently `expect.anything()` and `expect.any(Function)` behave incorrectly with `.toEqualWithoutMethods()`/`.methodlessly()` when used to compare against a function\
-i.e: `expect({ a: () => {} }).toEqualWithoutMethods({ a: expect.any(Function) });` will incorrectly return false.\
-However I have my best elves on the job to fix this!
 
 #### expect.methodlessly(object)
 
@@ -120,6 +128,14 @@ expect({ a: 1, x: () => {} }).toEqual(
 
 expect({ b: 1, x: () => {} }).toEqual(
   expect.not.methodlessly({ a: 1, x: () => {} }),
+); // true
+
+// Same as .toEqualWithoutMethods() above
+expect({ a: 1, x: () => {} }).toEqual(
+  expect.methodlessly({ a: 1, x: () => {}, y: expect.any(Function) }),
+); // false!
+expect({ a: 1, x: () => {} }).toEqual(
+  expect.methodlessly({ a: 1, x: expect.any(Function) }),
 ); // true
 ```
 
