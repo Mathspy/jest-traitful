@@ -1,4 +1,4 @@
-require("../dist/jest-trailtful.cjs");
+require("../dist/jest-traitful.cjs");
 
 describe("All jest-traitful matchers should be there", () => {
   test("methodlessly", () => {
