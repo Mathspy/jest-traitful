@@ -126,10 +126,9 @@ describe("methodlessly", () => {
         expect.methodlessly({ a: expect.anything(), x: () => {} }),
       );
 
-      // TODO: expect.any(Function) is a known limitation!
-      // expect({ a: 1, x: () => { } }).toEqual(
-      //   expect.methodlessly({ a: 1, x: expect.any(Function) }),
-      // );
+      expect({ a: 1, x: () => {} }).toEqual(
+        expect.methodlessly({ a: 1, x: expect.any(Function) }),
+      );
 
       expect({ a: { m: 5, n: 6 }, x: () => {} }).toEqual(
         expect.methodlessly({
@@ -138,22 +137,26 @@ describe("methodlessly", () => {
         }),
       );
 
-      // expect({ a: 1, x: () => { } }).toEqual(
-      //   expect.methodlessly({
-      //     a: expect.anything(),
-      //     x: expect.any(Function),
-      //     y: expect.any(Function),
-      //   }),
-      // );
+      expect({ a: 1, x: () => {} }).toEqual(
+        expect.methodlessly({
+          a: expect.anything(),
+          x: expect.any(Function),
+        }),
+      );
 
-      // expect({ a: 1, x: () => { } }).toEqual(
-      //   expect.methodlessly({
-      //     a: expect.any(String),
-      //     x: expect.any(Function),
-      //     y: expect.any(Function),
-      //   }),
-      // );
-
+      expect({ a: 1, x: () => {} }).not.toEqual(
+        expect.methodlessly({
+          a: expect.anything(),
+          x: expect.any(Function),
+          y: expect.any(Function),
+        }),
+      );
+      expect({ a: 1, x: () => {} }).not.toEqual(
+        expect.methodlessly({
+          a: expect.any(String),
+          x: expect.any(Function),
+        }),
+      );
       expect({ a: { m: 5, n: 6 }, x: () => {} }).not.toEqual(
         expect.methodlessly({
           a: expect.objectContaining({ z: 5 }),

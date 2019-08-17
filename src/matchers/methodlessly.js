@@ -21,19 +21,36 @@ function withoutMethods(obj) {
 }
 
 function predicate(received, expected) {
-  return _.isEqualWith(
-    withoutMethods(received),
-    withoutMethods(expected),
-    function customizer(first, second) {
-      if (first && first.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
-        return first.asymmetricMatch(second);
-      }
-      if (second && second.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
-        return second.asymmetricMatch(second);
-      }
-      return _.isFunction(first) || _.isFunction(second) || undefined;
-    },
-  );
+  return _.isEqualWith(received, expected, function customizer(first, second) {
+    if (_.isFunction(first) && (_.isFunction(second) || _.isNil(second))) {
+      return true;
+    }
+
+    if (_.isFunction(second) && (_.isFunction(first) || _.isNil(first))) {
+      return true;
+    }
+
+    if (first && first.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
+      return first.asymmetricMatch(second);
+    }
+    if (second && second.$$typeof === Symbol.for("jest.asymmetricMatcher")) {
+      return second.asymmetricMatch(second);
+    }
+
+    if (_.isPlainObject(first) && _.isPlainObject(second)) {
+      return _.transform(
+        _.union(Object.keys(first), Object.keys(second)),
+        (result, key) => {
+          // This is how _.transform is meant to be used
+          // eslint-disable-next-line no-return-assign, no-param-reassign
+          return (result.current = predicate(first[key], second[key]));
+        },
+        { current: true },
+      ).current;
+    }
+
+    return undefined;
+  });
 }
 
 function message(received, expected, inverse) {
