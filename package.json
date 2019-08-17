@@ -1,6 +1,6 @@
 {
   "name": "jest-traitful",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/jest-traitful.cjs.js",
   "description": "A bundle of Jest matchers for simplifying testing traitful JavaScript",
   "files": [
